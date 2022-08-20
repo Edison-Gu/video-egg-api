@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:39:53
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-20 23:08:31
+ * @LastEditTime: 2022-08-20 23:28:26
  * @Descripttion: 代理豆瓣搜索接口，爬取对应网站内容
  */
 const { Service } = require('egg')
@@ -15,6 +15,15 @@ class Movie extends Service {
     const { app, ctx: { model: { Movie } } } = this
     const total = await Movie.count()
     return total
+    // const { app, ctx: { model: { Emoticon } } } = this
+    // const rTotal = await app.redis.get('emoticon').get(EMOTICON_TOTAL)
+    // if (rTotal) {
+    //   return rTotal
+    // } else {
+    //   const total = await Emoticon.count()
+    //   app.redis.get('emoticon').set(EMOTICON_TOTAL, total, 'EX', CACHE_TIME)
+    //   return total
+    // }
   }
 
   async getMovieList({ findQuery = {}, params = {} }) {

@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:12:40
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-20 22:30:41
+ * @LastEditTime: 2022-08-20 23:25:32
  * @Descripttion: 默认配置
  */
 /* eslint valid-jsdoc: "off" */
@@ -31,7 +31,22 @@ module.exports = appInfo => {
       options: {},
     },
   };
-
+  config.redis = {
+    clients: {
+      emoticon: {
+        host: '1.14.77.152',
+        port: 6379,
+        password: 'Gu198573',
+        db: 0
+      },
+      emoji: {
+        host: '1.14.77.152',
+        port: 6379,
+        password: 'Gu198573',
+        db: 0
+      }
+    }
+  };
   config.security = {
     csrf: {
       enable: false,
