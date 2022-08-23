@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-23 14:59:36
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-23 19:26:12
+ * @LastEditTime: 2022-08-23 20:22:34
  * @Descripttion: 
  */
 const { Service } = require('egg')
@@ -14,7 +14,6 @@ class Tag extends Service {
     const id = await incKey({model: Tag})
     const tag = new Tag({id})
     const res = await tag.save()
-    console.log('---res', res)
     return res
   }
 }
