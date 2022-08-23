@@ -2,19 +2,20 @@
  * @Author: EdisonGu
  * @Date: 2022-08-23 11:01:23
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-23 20:24:25
+ * @LastEditTime: 2022-08-23 20:39:26
  * @Descripttion: 
  */
 const Controller = require('egg').Controller
 
 class TagController extends Controller {
   async createTag() {
-    const { ctx, ctx: { service } } = this
+    const { ctx, ctx: { service, request: { body: { tagName } } } } = this
+    if (!tagName) throw 'missing parameters'
     const res = await service.tag.add()
     if (res) {
       ctx.body = {
         code: 1,
-        data: null,
+        data: res,
         message: 'success',
       }
     }
