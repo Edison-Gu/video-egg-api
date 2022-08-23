@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:56:45
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-22 20:45:49
+ * @LastEditTime: 2022-08-23 13:52:26
  * @Descripttion: 
  */
 
@@ -28,7 +28,6 @@ class MovieController extends Controller {
       console.log('----error', error)
     } finally {
       ctx.body = ctxBody({list, custom: { total }})
-      return list
     }
   }
 }

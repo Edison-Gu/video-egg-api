@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-20 22:44:08
+ * @LastEditTime: 2022-08-23 19:07:59
  * @Descripttion: 
  */
 'use strict';
@@ -132,6 +132,17 @@ const transCode = key => {
   }
   return code
 }
+// mongodb auto increment id
+const incKey = async ({model, key = 'id'}) => {
+  const sortQuery = {}
+  let keyResult = 1000 // The default is 1000
+  sortQuery[key] = -1
+  const res = await model.findOne().sort(sortQuery)
+  if (res) {
+    keyResult = res[key] + 1
+  }
+  return keyResult
+}
 
 module.exports = {
   ctxBody,
@@ -141,5 +152,6 @@ module.exports = {
   minCount,
   maxCount,
   dealStr,
-  transCode
+  transCode,
+  incKey
 }
