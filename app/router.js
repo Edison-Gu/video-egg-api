@@ -14,5 +14,7 @@ module.exports = app => {
   const { router, controller } = app;
   router.get('/', controller.home.index);
   router.get('/movieList', controller.movie.getMovieList)
+
+  router.get('/tagList', controller.tag.getTagList)
   router.post('/creatTag', controller.tag.createTag)
 };

@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:39:53
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-20 23:28:26
+ * @LastEditTime: 2022-08-22 22:45:34
  * @Descripttion: 代理豆瓣搜索接口，爬取对应网站内容
  */
 const { Service } = require('egg')
