@@ -2,10 +2,11 @@
  * @Author: EdisonGu
  * @Date: 2022-08-23 11:01:23
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-24 23:42:29
+ * @LastEditTime: 2022-08-25 23:20:17
  * @Descripttion: 
  */
 const Controller = require('egg').Controller
+const { handleResult } = require('../utils/common')
 
 class TagController extends Controller {
   async getTagList() {
@@ -14,7 +15,7 @@ class TagController extends Controller {
     if (res) {
       ctx.body = {
         code: 1,
-        data: res,
+        data: res.map(item => handleResult(item)),
         message: 'success',
       }
     }

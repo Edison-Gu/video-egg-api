@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-23 19:07:59
+ * @LastEditTime: 2022-08-25 23:21:58
  * @Descripttion: 
  */
 'use strict';
@@ -144,6 +144,35 @@ const incKey = async ({model, key = 'id'}) => {
   return keyResult
 }
 
+// str to toLowerCase, 第一个字母大写
+const firstStrToUp = str => {
+  return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase())
+}
+
+// code_about => CodeAbout
+const handleResult = (result) => {
+  result = JSON.parse(JSON.stringify(result))
+  delete result._id
+  let res = {}
+  for (const key in result) {
+    let str = key
+    let value = result[key]
+    if (key.indexOf('_') > -1) {
+      const keyArr = key.split('_')
+      str = ''
+      keyArr.forEach((el, index) => {
+        index > 0 && (el = firstStrToUp(el))
+        str += el
+      }) 
+    }
+    if (key === 'create_time' || key === 'update_time') {
+      value = new Date(value).getTime()
+    }
+    res[str] = value
+  }
+  return res
+}
+
 module.exports = {
   ctxBody,
   objectBody,
@@ -153,5 +182,6 @@ module.exports = {
   maxCount,
   dealStr,
   transCode,
-  incKey
+  incKey,
+  handleResult
 }

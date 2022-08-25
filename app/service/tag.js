@@ -2,11 +2,11 @@
  * @Author: EdisonGu
  * @Date: 2022-08-23 14:59:36
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-24 23:39:40
+ * @LastEditTime: 2022-08-25 22:59:52
  * @Descripttion: 
  */
 const { Service } = require('egg')
-const { incKey } = require('../utils/common')
+const { incKey, handleResult } = require('../utils/common')
 
 class Tag extends Service {
   async getTag() {
