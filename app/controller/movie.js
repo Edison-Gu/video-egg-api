@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:56:45
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-23 13:52:26
+ * @LastEditTime: 2022-08-28 18:35:16
  * @Descripttion: 
  */
 
@@ -10,6 +10,13 @@ const Controller = require('egg').Controller;
 const { ctxBody } = require('../utils/common')
 
 class MovieController extends Controller {
+  async getHomeRecommend() {
+    const { ctx, ctx: { service } } = this
+    const resList = await Promise.all([service.movie.getMovieList({})])
+    if (resList && resList.length) {
+      ctx.body = ctxBody({ list: resList })
+    }
+  }
   async getMovieList() {
     const { ctx, ctx: { query, service } } = this
     let list = null
