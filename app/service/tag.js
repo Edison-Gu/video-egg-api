@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-23 14:59:36
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-25 22:59:52
+ * @LastEditTime: 2022-08-31 23:14:30
  * @Descripttion: 
  */
 const { Service } = require('egg')
@@ -13,8 +13,8 @@ class Tag extends Service {
     const { ctx: { model: { Tag } } } = this
     // const id = await incKey({model: Tag})
     // const tag = new Tag({id})
-    const res = await Tag.find()
-    return res
+    const result = await Tag.find()
+    return result.map(item => handleResult(item))
   }
   async add() {
     const { ctx: { model: { Tag } } } = this

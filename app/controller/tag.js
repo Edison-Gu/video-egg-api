@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-23 11:01:23
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-25 23:20:17
+ * @LastEditTime: 2022-08-31 23:14:37
  * @Descripttion: 
  */
 const Controller = require('egg').Controller
@@ -15,7 +15,7 @@ class TagController extends Controller {
     if (res) {
       ctx.body = {
         code: 1,
-        data: res.map(item => handleResult(item)),
+        data: res,
         message: 'success',
       }
     }

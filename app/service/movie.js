@@ -2,12 +2,12 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:39:53
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-25 22:49:17
+ * @LastEditTime: 2022-08-31 23:15:29
  * @Descripttion: 代理豆瓣搜索接口，爬取对应网站内容
  */
 const { Service } = require('egg')
 const cheerio = require('cheerio')
-const { dealStr, transCode } = require('../utils/common')
+const { dealStr, transCode, handleResult } = require('../utils/common')
 
 class Movie extends Service {
 
@@ -26,11 +26,11 @@ class Movie extends Service {
     // }
   }
 
-  async getMovieList({ findQuery = {}, params = {} }) {
+  async getMovieList({ findQuery = {}, sort = {}, params = {} }) {
     const { app, ctx: { model: { Movie } } } = this
     const { pageSize = 20, pageNo = 1 } = params
-    const result = await Movie.find(findQuery).skip(pageSize * (pageNo - 1)).limit(+pageSize)
-    return result
+    const result = await Movie.find(findQuery).skip(pageSize * (pageNo - 1)).limit(+pageSize).sort(sort)
+    return result.map(item => handleResult(item))
   }
   async getMovieInfo() {
     let result = null
