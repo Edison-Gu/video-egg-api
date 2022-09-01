@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:12:40
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-28 18:29:12
+ * @LastEditTime: 2022-09-01 19:33:50
  * @Descripttion: 
  */
 'use strict';
@@ -18,4 +18,7 @@ module.exports = app => {
 
   router.get('/tagList', controller.tag.getTagList)
   router.post('/creatTag', controller.tag.createTag)
+
+  router.get('/recommendList', controller.recommend.getRecommendList)
+  router.post('/createRecommend', controller.recommend.createRecommend)
 };

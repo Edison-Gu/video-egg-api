@@ -2,11 +2,10 @@
  * @Author: EdisonGu
  * @Date: 2022-08-23 11:01:23
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-31 23:14:37
+ * @LastEditTime: 2022-09-01 17:08:18
  * @Descripttion: 
  */
 const Controller = require('egg').Controller
-const { handleResult } = require('../utils/common')
 
 class TagController extends Controller {
   async getTagList() {
