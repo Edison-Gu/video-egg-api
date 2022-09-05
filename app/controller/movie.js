@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:56:45
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-31 23:32:47
+ * @LastEditTime: 2022-09-05 16:51:25
  * @Descripttion: 
  */
 
@@ -10,6 +10,9 @@ const Controller = require('egg').Controller;
 const { ctxBody, objectBody } = require('../utils/common')
 
 class MovieController extends Controller {
+  /**
+   * home recommend
+   */
   async getHomeRecommend() {
     const { ctx, ctx: { service } } = this
     const tags = await service.tag.getTag()
@@ -61,16 +64,19 @@ class MovieController extends Controller {
       // })
     }
   }
+  /**
+   * movie list
+   */
   async getMovieList() {
     const { ctx, ctx: { query, service } } = this
     let list = null
     let total = 0
     let findQuery = {}
     try {
-      let { pageNo = 1, pageSize = 20, type } = query
-      if (type) {
+      let { pageNo = 1, pageSize = 20, tag } = query
+      if (tag) {
         findQuery.tags = {
-          $in: [type]
+          $in: [tag]
         }
       }
       total = await service.movie.getMovieTotal()
@@ -79,6 +85,31 @@ class MovieController extends Controller {
       console.log('----error', error)
     } finally {
       ctx.body = ctxBody({list, custom: { total }})
+    }
+  }
+  /**
+   * update movie
+   */
+  async updateMovie() {
+    const { ctx, ctx: { service, request: { body: { ids } } } } = this
+    if (!ids) throw 'missing parameters'
+    const idList = ids.split(',').map(item => +item)
+    const findQuery = {
+      id: {
+        $in: idList
+      }
+    }
+    const updateInfo = {
+      home_type: []
+      // name: '绝地战警45'
+    }
+    const result = await service.movie.updateMovie({findQuery, updateInfo})
+    if (result) {
+      ctx.body = {
+        code: 1,
+        data: result,
+        message: 'success',
+      }
     }
   }
 }

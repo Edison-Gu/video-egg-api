@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:39:53
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-31 23:15:29
+ * @LastEditTime: 2022-09-05 16:45:17
  * @Descripttion: 代理豆瓣搜索接口，爬取对应网站内容
  */
 const { Service } = require('egg')
@@ -32,6 +32,16 @@ class Movie extends Service {
     const result = await Movie.find(findQuery).skip(pageSize * (pageNo - 1)).limit(+pageSize).sort(sort)
     return result.map(item => handleResult(item))
   }
+
+  /**
+   * 需要配置Schema，不然无法更新成功
+   */
+  async updateMovie({findQuery = {}, updateInfo = {}}) {
+    const { ctx: { model: { Movie } } } = this
+    const result = await Movie.updateMany(findQuery, updateInfo)
+    return result
+  }
+
   async getMovieInfo() {
     let result = null
     const { app, ctx: { query: { q = '' } } } = this
