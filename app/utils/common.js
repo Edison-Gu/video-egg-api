@@ -2,17 +2,18 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-25 23:21:58
+ * @LastEditTime: 2022-09-07 15:03:33
  * @Descripttion: 
  */
 'use strict';
 // const fs = require('fs')
 
-const ctxBody = ({list = [], custom = {}}) => {
+const ctxBody = ({data, custom = {}}) => {
   let body = {
-    code: list ? 1 : -1,
-    data: list,
-    ...custom
+    code: data ? 1 : -1,
+    data: data ? data : null,
+    ...custom,
+    message: 'SUCCESS'
   }
   return body
 }
@@ -20,7 +21,8 @@ const ctxBody = ({list = [], custom = {}}) => {
 const objectBody = ({obj = {}}) => {
   let body = {
     code: obj ? 1 : -1,
-    data: obj ? obj : null
+    data: obj ? obj : null,
+    message: 'SUCCESS'
   }
   return body
 }

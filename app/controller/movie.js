@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:56:45
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-09-05 16:51:25
+ * @LastEditTime: 2022-09-07 16:12:46
  * @Descripttion: 
  */
 
@@ -35,7 +35,7 @@ class MovieController extends Controller {
     ])
     if (resList && resList.length) {
       ctx.body = ctxBody({
-        list: [
+        data: [
           {
             homeType: 'recommend',
             homeName: '推荐',
@@ -50,66 +50,44 @@ class MovieController extends Controller {
           }
         ]
       })
-      // ctx.body = objectBody({
-      //   obj: {
-      //     // homeBanner: resList[0],
-      //     recommend: {
-      //       tags,
-      //       list: resList[0]
-      //     },
-      //     newest: {
-      //      list: resList[1]
-      //     }
-      //   }
-      // })
     }
   }
   /**
    * movie list
    */
   async getMovieList() {
-    const { ctx, ctx: { query, service } } = this
-    let list = null
-    let total = 0
-    let findQuery = {}
-    try {
-      let { pageNo = 1, pageSize = 20, tag } = query
-      if (tag) {
-        findQuery.tags = {
-          $in: [tag]
-        }
-      }
-      total = await service.movie.getMovieTotal()
-      list = await service.movie.getMovieList({findQuery, params: { pageNo, pageSize }})
-    } catch (error) {
-      console.log('----error', error)
-    } finally {
-      ctx.body = ctxBody({list, custom: { total }})
+    const { ctx, ctx: { query: { tag, name, year, language, pageNo, pageSize }, service } } = this
+    const findQuery = {}
+    tag && (findQuery.tags = { $in: [tag] })
+    language && (findQuery.language = { $in: [language] })
+    name && (findQuery.name = name)
+    year && (findQuery.year = year)
+    const result = await Promise.all([
+      service.movie.getMovieTotal(),
+      service.movie.getMovieList({findQuery, params: { pageNo, pageSize }})
+    ])
+    if (result) {
+      ctx.body = ctxBody({
+        data: result[1],
+        custom: { total: result[0] }
+      })
     }
   }
   /**
    * update movie
    */
   async updateMovie() {
-    const { ctx, ctx: { service, request: { body: { ids } } } } = this
+    const { ctx, ctx: { service, request: { body: { ids, homeType } } } } = this
     if (!ids) throw 'missing parameters'
     const idList = ids.split(',').map(item => +item)
-    const findQuery = {
-      id: {
-        $in: idList
-      }
-    }
-    const updateInfo = {
-      home_type: []
-      // name: '绝地战警45'
-    }
+    const updateInfo = {}
+    const findQuery = { id: { $in: idList } }
+    homeType && (updateInfo.home_type = homeType)
     const result = await service.movie.updateMovie({findQuery, updateInfo})
     if (result) {
-      ctx.body = {
-        code: 1,
-        data: result,
-        message: 'success',
-      }
+      ctx.body = ctxBody({
+        data: result
+      })
     }
   }
 }
