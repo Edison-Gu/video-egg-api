@@ -2,14 +2,13 @@
  * @Author: EdisonGu
  * @Date: 2022-08-23 20:00:34
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-09-13 00:23:36
+ * @LastEditTime: 2022-09-13 00:35:44
  * @Descripttion: common error message
  */
 
 module.exports = () => {
   return async function errorHandler(ctx, next) {
     try {
-      console.log('---ctx', ctx.request.header)
       const { whitelist = '' } = ctx.request.header
       if (whitelist !== 'dogMovie')
       throw {

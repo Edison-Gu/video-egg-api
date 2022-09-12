@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:56:45
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-09-12 23:42:10
+ * @LastEditTime: 2022-09-13 00:39:26
  * @Descripttion: 
  */
 
@@ -100,6 +100,9 @@ class MovieController extends Controller {
       })
     }
   }
+  /**
+   * movie recommend
+   */
   async getMovieRecommend() {
     const { ctx, ctx: { query: { id }, service } } = this
     const movieInfo = await service.movie.getMovieInfo({findQuery: { id: +id }})
@@ -111,6 +114,24 @@ class MovieController extends Controller {
     if (result) {
       ctx.body = ctxBody({
         data: result
+      })
+    }
+  }
+  async searchMovie() {
+    const { ctx, ctx: { query: { name }, service } } = this
+    const findQuery = {}
+    if (!name) throw 'missing parameters'
+    name && (findQuery.name = { $regex: name })
+    const result = await Promise.all([
+      service.movie.getMovieList({findQuery})
+    ])
+    if (result) {
+      ctx.body = ctxBody({
+        data: {
+          movie: result[0],
+          tv: [],
+          cartoon: []
+        }
       })
     }
   }
