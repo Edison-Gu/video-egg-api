@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:39:53
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-09-05 16:45:17
+ * @LastEditTime: 2022-09-12 23:30:48
  * @Descripttion: 代理豆瓣搜索接口，爬取对应网站内容
  */
 const { Service } = require('egg')
@@ -10,7 +10,6 @@ const cheerio = require('cheerio')
 const { dealStr, transCode, handleResult } = require('../utils/common')
 
 class Movie extends Service {
-
   async getMovieTotal() {
     const { app, ctx: { model: { Movie } } } = this
     const total = await Movie.count()
@@ -26,11 +25,17 @@ class Movie extends Service {
     // }
   }
 
-  async getMovieList({ findQuery = {}, sort = {}, params = {} }) {
+  async getMovieList({findQuery = {}, sort = {}, params = {}}) {
     const { app, ctx: { model: { Movie } } } = this
     const { pageSize = 20, pageNo = 1 } = params
     const result = await Movie.find(findQuery).skip(pageSize * (pageNo - 1)).limit(+pageSize).sort(sort)
     return result.map(item => handleResult(item))
+  }
+
+  async getMovieInfo({findQuery = {}}) {
+    const { app, ctx: { model: { Movie } } } = this
+    const result = await Movie.find(findQuery)
+    return handleResult(result[0])
   }
 
   /**
@@ -42,17 +47,17 @@ class Movie extends Service {
     return result
   }
 
-  async getMovieInfo() {
-    let result = null
-    const { app, ctx: { query: { q = '' } } } = this
-    const url = `https://movie.douban.com/j/subject_suggest?q=${q}`
-    const { status, data } = await app.curl(url);
-    if (status === 200 && data && JSON.parse(data)) {
-      const info = JSON.parse(data)[0]
-      result = await this.getHtml({url: info.url})
-    }
-    return result
-  }
+  // async getMovieInfo() {
+  //   let result = null
+  //   const { app, ctx: { query: { q = '' } } } = this
+  //   const url = `https://movie.douban.com/j/subject_suggest?q=${q}`
+  //   const { status, data } = await app.curl(url);
+  //   if (status === 200 && data && JSON.parse(data)) {
+  //     const info = JSON.parse(data)[0]
+  //     result = await this.getHtml({url: info.url})
+  //   }
+  //   return result
+  // }
   async getHtml({url}) {
     const { app } = this
     let videoInfo = {}
