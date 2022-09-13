@@ -28,6 +28,7 @@
   },
   "scripts": {
     "start": "egg-scripts start --daemon --title=egg-server-",
+    "start:prod": "egg-scripts start --env=prod --daemon --title=egg-server-video-egg-api --ignore-stderr -p",
     "stop": "egg-scripts stop --title=egg-server-",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
