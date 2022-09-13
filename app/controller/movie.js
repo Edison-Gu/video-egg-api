@@ -105,8 +105,8 @@ class MovieController extends Controller {
    */
   async getMovieRecommend() {
     const { ctx, ctx: { query: { id }, service } } = this
-    const movieInfo = await service.movie.getDetail({findQuery: { id: +id }})
-    const { videoType, tags } = movieInfo
+    const movieDetail = await service.movie.getDetail({findQuery: { id: +id }})
+    const { videoType, tags } = movieDetail
     const findQuery = {
       tags: {$in: tags}
     }
