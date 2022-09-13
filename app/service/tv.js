@@ -1,18 +1,18 @@
 /*
  * @Author: EdisonGu
- * @Date: 2022-08-20 22:39:53
+ * @Date: 2022-09-13 11:30:42
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-09-12 23:30:48
- * @Descripttion: 代理豆瓣搜索接口，爬取对应网站内容
+ * @LastEditTime: 2022-09-13 13:40:29
+ * @Descripttion: 
  */
 const { Service } = require('egg')
 const cheerio = require('cheerio')
 const { dealStr, transCode, handleResult } = require('../utils/common')
 
-class Movie extends Service {
+class Tv extends Service {
   async getTotal() {
-    const { app, ctx: { model: { Movie } } } = this
-    const total = await Movie.count()
+    const { app, ctx: { model: { Tv } } } = this
+    const total = await Tv.count()
     return total
     // const { app, ctx: { model: { Emoticon } } } = this
     // const rTotal = await app.redis.get('emoticon').get(EMOTICON_TOTAL)
@@ -26,15 +26,15 @@ class Movie extends Service {
   }
 
   async getList({findQuery = {}, sort = {}, params = {}}) {
-    const { app, ctx: { model: { Movie } } } = this
+    const { app, ctx: { model: { Tv } } } = this
     const { pageSize = 20, pageNo = 1 } = params
-    const result = await Movie.find(findQuery).skip(pageSize * (pageNo - 1)).limit(+pageSize).sort(sort)
+    const result = await Tv.find(findQuery).skip(pageSize * (pageNo - 1)).limit(+pageSize).sort(sort)
     return result.map(item => handleResult(item))
   }
 
   async getDetail({findQuery = {}}) {
-    const { app, ctx: { model: { Movie } } } = this
-    const result = await Movie.find(findQuery)
+    const { app, ctx: { model: { Tv } } } = this
+    const result = await Tv.find(findQuery)
     return handleResult(result[0])
   }
 
@@ -42,15 +42,15 @@ class Movie extends Service {
    * 需要配置Schema，不然无法更新成功
    */
   async updateInfo({findQuery = {}, updateInfo = {}}) {
-    const { ctx: { model: { Movie } } } = this
-    const result = await Movie.updateMany(findQuery, updateInfo)
+    const { ctx: { model: { Tv } } } = this
+    const result = await Tv.updateMany(findQuery, updateInfo)
     return result
   }
 
   // async getDetail() {
   //   let result = null
   //   const { app, ctx: { query: { q = '' } } } = this
-  //   const url = `https://movie.douban.com/j/subject_suggest?q=${q}`
+  //   const url = `https://Tv.douban.com/j/subject_suggest?q=${q}`
   //   const { status, data } = await app.curl(url);
   //   if (status === 200 && data && JSON.parse(data)) {
   //     const info = JSON.parse(data)[0]
@@ -61,7 +61,7 @@ class Movie extends Service {
   async getHtml({url}) {
     const { app } = this
     let videoInfo = {}
-    // https://movie.douban.com/subject/25828589/?suggest=%E9%BB%91%E5%AF%A1%E5%A6%87
+    // https://Tv.douban.com/subject/25828589/?suggest=%E9%BB%91%E5%AF%A1%E5%A6%87
     const { status, data } = await app.curl(url)
     if (status === 200 && data) {
       const pageXml = data.toString()
@@ -106,4 +106,4 @@ class Movie extends Service {
   }
 }
 
-module.exports = Movie
+module.exports = Tv

@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:56:45
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-09-13 00:39:26
+ * @LastEditTime: 2022-09-13 13:41:39
  * @Descripttion: 
  */
 
@@ -17,21 +17,21 @@ class MovieController extends Controller {
     const { ctx, ctx: { service } } = this
     const tags = await service.tag.getTag()
     const resList = await Promise.all([
-      // service.movie.getMovieList({
+      // service.movie.getList({
       //   findQuery: {
       //    home_type: 'homeBanner'
       //   }
       // }),
-      service.movie.getMovieList({
+      service.movie.getList({
         findQuery: {
          tags: {$in: [tags[0].tagType]},
         //  home_type: 'recommend'
         }
       }),
-      service.movie.getMovieList({
+      service.movie.getList({
         sort: {year: -1}
       }),
-      service.movie.getMovieList({
+      service.movie.getList({
         findQuery: {
           home_type: {$in: ['classic']},
          //  home_type: 'recommend'
@@ -66,16 +66,16 @@ class MovieController extends Controller {
   /**
    * movie list
    */
-  async getMovieList() {
-    const { ctx, ctx: { query: { tag, name, year, language, pageNo, pageSize }, service } } = this
+  async getList() {
+    const { ctx, ctx: { query: { tag, name, year, language, pageNo, pageSize, type = 'movie' }, service } } = this
     const findQuery = {}
     tag && (findQuery.tags = { $in: [tag] })
     language && (findQuery.language = { $in: [language] })
     name && (findQuery.name = name)
     year && (findQuery.year = year)
     const result = await Promise.all([
-      service.movie.getMovieTotal(),
-      service.movie.getMovieList({findQuery, params: { pageNo, pageSize }})
+      service[type].getTotal(),
+      service[type].getList({findQuery, params: { pageNo, pageSize }})
     ])
     if (result) {
       ctx.body = ctxBody({
@@ -87,13 +87,13 @@ class MovieController extends Controller {
   /**
    * movie info
    */
-  async getMovieInfo() {
+  async getDetail() {
     const { ctx, ctx: { query: { id, name }, service } } = this
     const findQuery = {}
     if (!id) throw 'missing parameters'
     id && (findQuery.id = +id)
     name && (findQuery.name = name)
-    const result = await service.movie.getMovieInfo({findQuery})
+    const result = await service.movie.getDetail({findQuery})
     if (result) {
       ctx.body = ctxBody({
         data: result
@@ -105,12 +105,12 @@ class MovieController extends Controller {
    */
   async getMovieRecommend() {
     const { ctx, ctx: { query: { id }, service } } = this
-    const movieInfo = await service.movie.getMovieInfo({findQuery: { id: +id }})
+    const movieInfo = await service.movie.getDetail({findQuery: { id: +id }})
     const { videoType, tags } = movieInfo
     const findQuery = {
       tags: {$in: tags}
     }
-    const result = await service.movie.getMovieList({findQuery})
+    const result = await service.movie.getList({findQuery})
     if (result) {
       ctx.body = ctxBody({
         data: result
@@ -123,13 +123,14 @@ class MovieController extends Controller {
     if (!name) throw 'missing parameters'
     name && (findQuery.name = { $regex: name })
     const result = await Promise.all([
-      service.movie.getMovieList({findQuery})
+      service.movie.getList({findQuery}),
+      service.tv.getList({findQuery})
     ])
     if (result) {
       ctx.body = ctxBody({
         data: {
           movie: result[0],
-          tv: [],
+          tv: result[1],
           cartoon: []
         }
       })
@@ -138,14 +139,14 @@ class MovieController extends Controller {
   /**
    * update movie
    */
-  async updateMovie() {
+  async updateInfo() {
     const { ctx, ctx: { service, request: { body: { ids, homeType } } } } = this
     if (!ids) throw 'missing parameters'
     const idList = ids.split(',').map(item => +item)
     const updateInfo = {}
     const findQuery = { id: { $in: idList } }
     homeType && (updateInfo.home_type = homeType)
-    const result = await service.movie.updateMovie({findQuery, updateInfo})
+    const result = await service.movie.updateInfo({findQuery, updateInfo})
     console.log('---result', result)
     if (result) {
       ctx.body = ctxBody({
