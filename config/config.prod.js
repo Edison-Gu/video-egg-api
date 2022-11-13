@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-09-13 13:50:06
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-09-13 13:54:36
+ * @LastEditTime: 2022-11-13 23:54:47
  * @Descripttion: 
  */
 'use strict';
@@ -47,10 +47,10 @@ module.exports = appInfo => {
   };
 
   config.mongoose = {
-    client: {
-      url: 'mongodb://EdisonGu:Gu198573@1.14.77.152:27017/web_video?authSource=admin',
-      options: {},
-    },
+    // client: {
+    //   url: 'mongodb://EdisonGu:Gu198573@1.14.77.152:27017/web_video?authSource=admin',
+    //   options: {},
+    // },
   };
 
   config.redis = {

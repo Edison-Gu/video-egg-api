@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:12:40
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-08-23 20:15:21
+ * @LastEditTime: 2022-11-13 23:55:01
  * @Descripttion: 默认配置
  */
 /* eslint valid-jsdoc: "off" */
@@ -27,10 +27,10 @@ module.exports = appInfo => {
   // config.middleware = [];
 
   config.mongoose = {
-    client: {
-      url: 'mongodb://EdisonGu:Gu198573@1.14.77.152:27017/web_video?authSource=admin',
-      options: {},
-    },
+    // client: {
+    //   url: 'mongodb://EdisonGu:Gu198573@1.14.77.152:27017/web_video?authSource=admin',
+    //   options: {},
+    // },
   };
   config.redis = {
     clients: {
