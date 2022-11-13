@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:12:40
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-09-13 14:49:40
+ * @LastEditTime: 2022-11-13 00:29:33
  * @Descripttion: 
  */
 'use strict';
@@ -24,5 +24,5 @@ module.exports = app => {
 
   router.get('/recommendList', controller.recommend.getRecommendList)
   router.post('/createRecommend', controller.recommend.createRecommend)
-
+  router.get('/getcj', controller.movie.getcj) // 首页推荐
 };
