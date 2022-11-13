@@ -11,8 +11,9 @@ class CmsController extends Controller {
         paramsStr += `${key}=${query[key]}&`
       }
     }
-    const { status, data } = await this.ctx.curl(`${url}?${paramsStr}`, { timeout: 10000 })
-    console.log('----status', status)
+    const curl = url.indexOf('?') > -1 ? `${url}&${paramsStr}` : `${url}?${paramsStr}`
+    const { status, data } = await this.ctx.curl(curl, { timeout: 10000 })
+    console.log('----status', status, curl)
     if (status === 200) {
       ctx.body = cjBody(data)
     }
