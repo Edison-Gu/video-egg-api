@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:56:45
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-09-13 13:41:39
+ * @LastEditTime: 2022-11-13 10:06:58
  * @Descripttion: 
  */
 
@@ -152,6 +152,14 @@ class MovieController extends Controller {
       ctx.body = ctxBody({
         data: result
       })
+    }
+  }
+  async getcj() {
+    const { ctx } = this
+    const result = await this.ctx.curl('https://www.ddzyz1.com/api.php/provide/vod/?ac=list')
+    console.log('-----result', result)
+    if (result) {
+      ctx.body = JSON.parse(result.data.toString())
     }
   }
 }
