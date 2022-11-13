@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-13 12:46:14
+ * @LastEditTime: 2022-11-13 12:47:57
  * @Descripttion: 
  */
 'use strict';
@@ -31,7 +31,7 @@ const cjBody = (bufferStr) => {
   let result = JSON.parse(bufferStr.toString())
   const { list = [] } = result
   const handleList = list.map(item => {
-    item.vod_nameaaaa = handleCjStr(item.vod_name)
+    item.vod_name = handleCjStr(item.vod_name)
     return item
   })
   result.list = handleList
