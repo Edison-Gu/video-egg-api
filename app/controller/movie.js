@@ -2,12 +2,12 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:56:45
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-13 10:06:58
+ * @LastEditTime: 2022-11-13 11:59:17
  * @Descripttion: 
  */
 
 const Controller = require('egg').Controller;
-const { ctxBody, objectBody } = require('../utils/common')
+const { ctxBody, objectBody, cjBody } = require('../utils/common')
 
 class MovieController extends Controller {
   /**
@@ -155,11 +155,17 @@ class MovieController extends Controller {
     }
   }
   async getcj() {
-    const { ctx } = this
-    const result = await this.ctx.curl('https://www.ddzyz1.com/api.php/provide/vod/?ac=list')
-    console.log('-----result', result)
-    if (result) {
-      ctx.body = JSON.parse(result.data.toString())
+    const { ctx, ctx: { query } } = this
+    const { url = '' } = query
+    let paramsStr = ''
+    for (const key in query) {
+      if (key !== 'url') {
+        paramsStr += `${key}=${query[key]}&`
+      }
+    }
+    const { status, data } = await this.ctx.curl(`${url}?${paramsStr}`, { timeout: 10000 })
+    if (status === 200) {
+      ctx.body = cjBody(data)
     }
   }
 }

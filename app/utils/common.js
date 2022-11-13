@@ -2,13 +2,13 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-09-07 15:03:33
+ * @LastEditTime: 2022-11-13 12:46:14
  * @Descripttion: 
  */
 'use strict';
 // const fs = require('fs')
 
-const ctxBody = ({data, custom = {}}) => {
+const ctxBody = ({ data, custom = {} }) => {
   let body = {
     code: data ? 1 : -1,
     data: data ? data : null,
@@ -18,7 +18,7 @@ const ctxBody = ({data, custom = {}}) => {
   return body
 }
 
-const objectBody = ({obj = {}}) => {
+const objectBody = ({ obj = {} }) => {
   let body = {
     code: obj ? 1 : -1,
     data: obj ? obj : null,
@@ -26,11 +26,52 @@ const objectBody = ({obj = {}}) => {
   }
   return body
 }
+
+const cjBody = (bufferStr) => {
+  let result = JSON.parse(bufferStr.toString())
+  const { list = [] } = result
+  const handleList = list.map(item => {
+    item.vod_nameaaaa = handleCjStr(item.vod_name)
+    return item
+  })
+  result.list = handleList
+  return result
+}
+
+// 替换采集名称字符串，比如 行尸走肉 第一季 => 行尸走肉第一季, 默认处理100季以内
+const handleCjStr = str => {
+  str = str.replace(/(^\s*)|(\s*$)/g, '') // 去除前后空格
+  let tempStr = ''
+  const replaceNumStr = []
+  const replaceCnStr = []
+  for (let index = 0; index < 100; index++) {
+    replaceNumStr.push(`第${index + 1}季`)
+    replaceCnStr.push(`第${SectionToChinese(index + 1)}季`)
+  }
+  replaceCnStr.forEach((item, index) => {
+    const cnIndex = str.indexOf(item)
+    const numIndex = str.indexOf(replaceNumStr[index])
+    if (cnIndex > -1 || numIndex > -1) {
+      const tempItem = numIndex > -1 ? replaceNumStr[index] : item
+      const strList = str.split(tempItem)
+      strList.forEach((el, idx) => {
+        if (el) {
+          if (idx === 0) {
+            el = `${el.replace(/(^\s*)|(\s*$)/g, '')} ${item}`
+          }
+          tempStr += el
+        }
+      })
+    }
+  })
+  return tempStr
+}
+
 /**
  * 处理相邻的文档
  * @params
  */
-const adjacentBody = ({item, custom = {}}) => {
+const adjacentBody = ({ item, custom = {} }) => {
   let body = {
     code: -1,
     data: null
@@ -56,7 +97,7 @@ const randomCount = count => {
 /**
    * 根据id和total获取范围
    */
-const minCount = ({id, total, pageSize, multiple = 20, spacing = 50}) => {
+const minCount = ({ id, total, pageSize, multiple = 20, spacing = 50 }) => {
   let minCount = id + spacing
   const maxCount = id + pageSize * multiple
   if ((maxCount - 1000) > total) { // 数据库id，默认从1000开始
@@ -67,7 +108,7 @@ const minCount = ({id, total, pageSize, multiple = 20, spacing = 50}) => {
 /**
  * 根据id和total获取范围
  */
-const maxCount = ({id, total, pageSize, multiple = 20, spacing = 50}) => {
+const maxCount = ({ id, total, pageSize, multiple = 20, spacing = 50 }) => {
   let maxCount = id + pageSize * multiple
   if ((maxCount - 1000) > total) {
     maxCount = id - spacing
@@ -79,7 +120,7 @@ const maxCount = ({id, total, pageSize, multiple = 20, spacing = 50}) => {
  * 去除前后空格和多余的字符
  * @param {*} str 
  */
-const dealStr = ({str, strList = []}) => {
+const dealStr = ({ str, strList = [] }) => {
   strList.forEach(el => {
     str = str.replace(el, '')
   })
@@ -128,14 +169,14 @@ const transCode = key => {
     case '单集片长': // 电视剧
       code = 'single_episode_time'
       break;
-  
+
     default:
       break;
   }
   return code
 }
 // mongodb auto increment id
-const incKey = async ({model, key = 'id'}) => {
+const incKey = async ({ model, key = 'id' }) => {
   const sortQuery = {}
   let keyResult = 1000 // The default is 1000
   sortQuery[key] = -1
@@ -165,7 +206,7 @@ const handleResult = (result) => {
       keyArr.forEach((el, index) => {
         index > 0 && (el = firstStrToUp(el))
         str += el
-      }) 
+      })
     }
     if (key === 'create_time' || key === 'update_time') {
       value = new Date(value).getTime()
@@ -175,9 +216,48 @@ const handleResult = (result) => {
   return res
 }
 
+// 阿拉伯数字转中文
+function SectionToChinese(num) {
+  if (!/^\d*(\.\d*)?$/.test(num)) {
+    alert("Number is wrong!");
+    return "Number is wrong!";
+  }
+  var AA = new Array("零", "一", "二", "三", "四", "五", "六", "七", "八", "九");
+  var BB = new Array("", "十", "百", "千", "万", "亿", "点", "");
+  var a = ("" + num).replace(/(^0*)/g, "").split("."),
+    k = 0,
+    re = "";
+  for (var i = a[0].length - 1; i >= 0; i--) {
+    switch (k) {
+      case 0:
+        re = BB[7] + re;
+        break;
+      case 4:
+        if (!new RegExp("0{4}\\d{" + (a[0].length - i - 1) + "}$").test(a[0]))
+          re = BB[4] + re;
+        break;
+      case 8:
+        re = BB[5] + re;
+        BB[7] = BB[5];
+        k = 0;
+        break;
+    }
+    if (k % 4 == 2 && a[0].charAt(i + 2) != 0 && a[0].charAt(i + 1) == 0) re = AA[0] + re;
+    if (a[0].charAt(i) != 0) re = AA[a[0].charAt(i)] + BB[k % 4] + re;
+    k++;
+  }
+  if (a.length > 1) //加上小数部分(如果有小数部分) 
+  {
+    re += BB[6];
+    for (var i = 0; i < a[1].length; i++) re += AA[a[1].charAt(i)];
+  }
+  return re.replace('一十', '十')
+}
+
 module.exports = {
   ctxBody,
   objectBody,
+  cjBody,
   adjacentBody,
   randomCount,
   minCount,
