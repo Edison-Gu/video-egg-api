@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-13 13:29:36
+ * @LastEditTime: 2022-11-13 16:40:29
  * @Descripttion: 
  */
 'use strict';
@@ -31,7 +31,11 @@ const cjBody = (bufferStr) => {
   let result = JSON.parse(bufferStr.toString())
   const { list = [] } = result
   const handleList = list.map(item => {
-    item.vod_name = handleCjStr(item.vod_name)
+    let { vod_douban_score = 0, vod_name } = item
+    item.vod_name = handleCjStr(vod_name)
+    vod_douban_score = (+vod_douban_score) > 0 ? vod_douban_score : getRandomScore()
+    item.vod_douban_score = vod_douban_score
+    item.vod_score = vod_douban_score ? vod_douban_score : getRandomScore() // 没有豆瓣评分取6.8-8.8的随机数
     return item
   })
   result.list = handleList
@@ -65,6 +69,13 @@ const handleCjStr = str => {
     }
   })
   return tempStr ? tempStr : str
+}
+
+// 取随机分数
+const getRandomScore = (min = 6.8, max = 8.8) => {
+  let score = 0
+  score = Math.random()*(max - min)+min
+  return score.toFixed(2)
 }
 
 /**
