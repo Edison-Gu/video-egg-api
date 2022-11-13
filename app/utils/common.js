@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-13 12:47:57
+ * @LastEditTime: 2022-11-13 13:29:36
  * @Descripttion: 
  */
 'use strict';
@@ -64,7 +64,7 @@ const handleCjStr = str => {
       })
     }
   })
-  return tempStr
+  return tempStr ? tempStr : str
 }
 
 /**
