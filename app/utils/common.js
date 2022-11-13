@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-13 16:40:29
+ * @LastEditTime: 2022-11-13 17:49:03
  * @Descripttion: 
  */
 'use strict';
@@ -56,6 +56,7 @@ const handleCjStr = str => {
     const cnIndex = str.indexOf(item)
     const numIndex = str.indexOf(replaceNumStr[index])
     if (cnIndex > -1 || numIndex > -1) {
+      if (tempStr) return // 防止出现 行尸走肉第一季~第三季的情况
       const tempItem = numIndex > -1 ? replaceNumStr[index] : item
       const strList = str.split(tempItem)
       strList.forEach((el, idx) => {
