@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:56:45
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-13 23:43:46
+ * @LastEditTime: 2022-11-14 18:21:13
  * @Descripttion: 
  */
 
@@ -163,7 +163,7 @@ class MovieController extends Controller {
         paramsStr += `${key}=${query[key]}&`
       }
     }
-    const { status, data } = await this.ctx.curl(`${url}?${paramsStr}`, { timeout: 10000 })
+    const { status, data } = await this.ctx.curl(`${url}?${paramsStr}a=${Math.random()}`, { timeout: 10000 })
     console.log('----status', status)
     if (status === 200) {
       ctx.body = cjBody(data)
