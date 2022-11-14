@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-13 17:49:03
+ * @LastEditTime: 2022-11-14 12:09:37
  * @Descripttion: 
  */
 'use strict';
@@ -33,7 +33,7 @@ const cjBody = (bufferStr) => {
   const handleList = list.map(item => {
     let { vod_douban_score = 0, vod_name } = item
     item.vod_name = handleCjStr(vod_name)
-    vod_douban_score = (+vod_douban_score) > 0 ? vod_douban_score : getRandomScore()
+    vod_douban_score = (+vod_douban_score) > 4 ? vod_douban_score : getRandomScore() // 豆瓣大于4的评分才用，否则取评分
     item.vod_douban_score = vod_douban_score
     item.vod_score = vod_douban_score ? vod_douban_score : getRandomScore() // 没有豆瓣评分取6.8-8.8的随机数
     return item
