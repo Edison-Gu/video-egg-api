@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-14 12:09:37
+ * @LastEditTime: 2022-11-15 18:45:29
  * @Descripttion: 
  */
 'use strict';
@@ -31,8 +31,8 @@ const cjBody = (bufferStr) => {
   let result = JSON.parse(bufferStr.toString())
   const { list = [] } = result
   const handleList = list.map(item => {
-    let { vod_douban_score = 0, vod_name } = item
-    item.vod_name = handleCjStr(vod_name)
+    let { vod_douban_score = 0, vod_name, type_name } = item
+    item.vod_name = dealStr({ str: `${handleCjStr(vod_name)}${transType(type_name)}` })
     vod_douban_score = (+vod_douban_score) > 4 ? vod_douban_score : getRandomScore() // 豆瓣大于4的评分才用，否则取评分
     item.vod_douban_score = vod_douban_score
     item.vod_score = vod_douban_score ? vod_douban_score : getRandomScore() // 没有豆瓣评分取6.8-8.8的随机数
@@ -72,6 +72,27 @@ const handleCjStr = str => {
   return tempStr ? tempStr : str
 }
 
+// 根据影片类型来判断是否为电影/电视剧/综艺/动漫
+const transType = typeName => {
+  let transName = ''
+  if (typeName.indexOf('片') > -1) {
+    transName = '(NetFlyMovie)'
+  }
+  if (typeName.indexOf('剧') > -1) {
+    transName = '(NetFlyTv)'
+  }
+  if (typeName.indexOf('动漫') > -1) {
+    transName = '(NetFlyComic)'
+  }
+  if (typeName.indexOf('综艺') > -1) {
+    transName = '(NetFlyShow)'
+  }
+  if (typeName.indexOf('纪录片') > -1) {
+    transName = '(NetFlyDocumentary)'
+  }
+  return transName
+}
+
 // 取随机分数
 const getRandomScore = (min = 6.8, max = 8.8) => {
   let score = 0
@@ -79,43 +100,8 @@ const getRandomScore = (min = 6.8, max = 8.8) => {
   return score.toFixed(2)
 }
 
-/**
- * 处理相邻的文档
- * @params
- */
-const adjacentBody = ({ item, custom = {} }) => {
-  let body = {
-    code: -1,
-    data: null
-  }
-  const { selfNode, upNode = {}, downNode = {} } = item
-  if (selfNode) {
-    body = {
-      code: 1,
-      data: {
-        selfNode,
-        upNode,
-        downNode,
-        ...custom
-      }
-    }
-  }
-  return body
-}
-
 const randomCount = count => {
   return Math.floor(Math.random() * count)
-}
-/**
-   * 根据id和total获取范围
-   */
-const minCount = ({ id, total, pageSize, multiple = 20, spacing = 50 }) => {
-  let minCount = id + spacing
-  const maxCount = id + pageSize * multiple
-  if ((maxCount - 1000) > total) { // 数据库id，默认从1000开始
-    minCount = id - pageSize * multiple
-  }
-  return minCount
 }
 /**
  * 根据id和total获取范围
@@ -270,9 +256,7 @@ module.exports = {
   ctxBody,
   objectBody,
   cjBody,
-  adjacentBody,
   randomCount,
-  minCount,
   maxCount,
   dealStr,
   transCode,
