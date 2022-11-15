@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-15 18:45:29
+ * @LastEditTime: 2022-11-15 20:33:16
  * @Descripttion: 
  */
 'use strict';
@@ -76,19 +76,19 @@ const handleCjStr = str => {
 const transType = typeName => {
   let transName = ''
   if (typeName.indexOf('片') > -1) {
-    transName = '(NetFlyMovie)'
+    transName = 'NetFlyMovie'
   }
   if (typeName.indexOf('剧') > -1) {
-    transName = '(NetFlyTv)'
+    transName = 'NetFlyTv'
   }
   if (typeName.indexOf('动漫') > -1) {
-    transName = '(NetFlyComic)'
+    transName = 'NetFlyComic'
   }
   if (typeName.indexOf('综艺') > -1) {
-    transName = '(NetFlyShow)'
+    transName = 'NetFlyShow'
   }
   if (typeName.indexOf('纪录片') > -1) {
-    transName = '(NetFlyDocumentary)'
+    transName = 'NetFlyDocumentary'
   }
   return transName
 }
