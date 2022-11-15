@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-16 00:13:43
+ * @LastEditTime: 2022-11-16 00:24:15
  * @Descripttion: 
  */
 'use strict';
@@ -74,26 +74,20 @@ const handleCjStr = str => {
 
 // 根据影片类型来判断是否为电影/电视剧/综艺/动漫
 const transType = typeName => {
-  let transName = ''
+  let transName = 'NetFlyNormal'
   if (typeName.indexOf('片') > -1 || typeName.indexOf('电影') > -1) {
     transName = 'NetFlyMovie'
-  }
-  if (typeName.indexOf('剧') > -1 && typeName.indexOf('片') == -1) {
+  } else if (typeName.indexOf('剧') > -1 && typeName.indexOf('片') == -1) {
     transName = 'NetFlyTv'
-  }
-  if (typeName.indexOf('动漫') > -1) {
+  } else if (typeName.indexOf('动漫') > -1) {
     transName = 'NetFlyComic'
-  }
-  if (typeName.indexOf('综艺') > -1) {
+  } else if (typeName.indexOf('综艺') > -1) {
     transName = 'NetFlyShow'
-  }
-  if (typeName.indexOf('纪录片') > -1) {
+  } else if (typeName.indexOf('纪录片') > -1) {
     transName = 'NetFlyDocumentary'
-  }
-  if (typeName.indexOf('解说') > -1) {
+  } else if (typeName.indexOf('解说') > -1) {
     transName = 'NetFlyShort'
-  }
-  if (typeName.indexOf('体育') > -1 || typeName.indexOf('球') > -1) {
+  } else if (typeName.indexOf('体育') > -1 || typeName.indexOf('球') > -1) {
     transName = 'NetFlySports'
   }
   return transName
