@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-15 20:33:16
+ * @LastEditTime: 2022-11-15 20:38:20
  * @Descripttion: 
  */
 'use strict';
@@ -90,6 +90,12 @@ const transType = typeName => {
   if (typeName.indexOf('纪录片') > -1) {
     transName = 'NetFlyDocumentary'
   }
+  if (typeName.indexOf('解说') > -1) {
+    transName = 'NetFlyShort'
+  }
+  // if (typeName.indexOf('体育') > -1) {
+  //   transName = 'NetFlyShort'
+  // }
   return transName
 }
 
