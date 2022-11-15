@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-16 00:28:03
+ * @LastEditTime: 2022-11-16 00:29:48
  * @Descripttion: 
  */
 'use strict';
@@ -79,7 +79,7 @@ const transType = typeName => {
     transName = 'NetFlyMovie'
   } else if (typeName.indexOf('剧') > -1 && typeName.indexOf('片') == -1) {
     transName = 'NetFlyTv'
-  } else if (typeName.indexOf('动漫') > -1) {
+  } else if (typeName.indexOf('动漫') > -1 && typeName.indexOf('片') == -1) {
     transName = 'NetFlyComic'
   } else if (typeName.indexOf('综艺') > -1) {
     transName = 'NetFlyShow'
