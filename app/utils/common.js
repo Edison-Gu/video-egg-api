@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-15 20:38:20
+ * @LastEditTime: 2022-11-15 22:18:54
  * @Descripttion: 
  */
 'use strict';
@@ -75,7 +75,7 @@ const handleCjStr = str => {
 // 根据影片类型来判断是否为电影/电视剧/综艺/动漫
 const transType = typeName => {
   let transName = ''
-  if (typeName.indexOf('片') > -1) {
+  if (typeName.indexOf('片') > -1 || typeName.indexOf('电影') > -1) {
     transName = 'NetFlyMovie'
   }
   if (typeName.indexOf('剧') > -1) {
@@ -93,9 +93,9 @@ const transType = typeName => {
   if (typeName.indexOf('解说') > -1) {
     transName = 'NetFlyShort'
   }
-  // if (typeName.indexOf('体育') > -1) {
-  //   transName = 'NetFlyShort'
-  // }
+  if (typeName.indexOf('体育') > -1 || typeName.indexOf('球') > -1) {
+    transName = 'NetFlySports'
+  }
   return transName
 }
 
