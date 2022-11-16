@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-16 09:41:30
+ * @LastEditTime: 2022-11-16 10:45:28
  * @Descripttion: 
  */
 'use strict';
@@ -83,14 +83,16 @@ const transType = typeName => {
     transName = 'NetFlyComic'
   } else if (typeName.indexOf('综艺') > -1 && typeName.indexOf('片') == -1) {
     transName = 'NetFlyShow'
-  } else if (typeName.indexOf('解说') > -1) {
-    transName = 'NetFlyShort'
   } else if (typeName.indexOf('体育') > -1 || typeName.indexOf('球') > -1) {
     transName = 'NetFlySports'
   }
   // 需要单独处理分类
   if (typeName.indexOf('纪录片') > -1) {
     transName = 'NetFlyDocumentary'
+  }
+  
+  if (typeName.indexOf('解说') > -1) {
+    transName = 'NetFlyShort'
   }
 
   return transName
