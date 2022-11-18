@@ -2,11 +2,11 @@
  * @Author: EdisonGu
  * @Date: 2022-11-17 12:02:54
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-18 16:56:12
+ * @LastEditTime: 2022-11-18 19:51:08
  * @Descripttion: 常量
  */
 
-const lang = ['粤语', '闽南语', '泰语', '日语', '法语', '德语', '韩语', '英语']
+const lang = ['粤语', '闽南语', '泰语', '日语', '法语', '德语', '韩语', '英语', '英国', '韩版', '泰国']
 
 // 国语
 const cnArr = [
@@ -35,13 +35,44 @@ const cnArr = [
     rpStr: '国语'
   },
   {
-    str: '汉语普通话版',
+    str: '中配版',
     rpStr: '国语'
-  }
+  },
+  {
+    str: '中文',
+    rpStr: '国语'
+  },
 ]
-
+// 美国
+const usArr = [
+  {
+    str: '美版',
+    rpStr: '美版'
+  },
+  {
+    str: '美国版',
+    rpStr: '美版'
+  },
+  {
+    str: '英文',
+    rpStr: '英语'
+  },
+  {
+    str: '英文版',
+    rpStr: '英语'
+  },
+  {
+    str: '英版',
+    rpStr: '英语'
+  },
+  {
+    str: '日本版',
+    rpStr: '日版'
+  },
+]
 // 其它语言 
 const otherArr = [
+  ...usArr,
   ...lang.map(item => ({
     str: item,
     rpStr: item

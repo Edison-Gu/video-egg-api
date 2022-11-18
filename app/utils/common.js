@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-18 17:38:34
+ * @LastEditTime: 2022-11-18 19:48:54
  * @Descripttion: 
  */
 const { areaArr, langArr, vArr } = require('../contants')
@@ -115,14 +115,17 @@ const handleCjlg = vod => {
       const str = vod_name.substring(vod_name.length - el.str.length)
       if (str === el.str && vod_name.substring(0, vIndex)) {
         tempName = `${delVodNum(vod_name.substring(0, vIndex))} ${el.rpStr}`
+      } else {
+        tempName = vod_name.replace(el.str, el.rpStr)
       }
     }
   })
   
   tempArea = repeatArr(vodAreaArr).join(',')
   tempLang = repeatArr(vodLangArr).join(',')
-  // 如果地区是大陆，去除结尾是国语
-  if (tempArea.indexOf('大陆') > -1 || tempArea.indexOf('香港') > -1 || tempLang.indexOf('国语') > -1) {
+  // 如果地区是大陆并且是港片，去除国语
+  // if (tempArea.indexOf('大陆') > -1 || tempArea.indexOf('香港') > -1 || tempLang.indexOf('国语') > -1) {
+  if (tempArea.indexOf('大陆') > -1 && tempArea.indexOf('香港') > -1 || tempArea.indexOf('香港') > -1) {
     if(tempName.substring(tempName.length - 2) === '国语') {
       tempName = tempName.substring(0, tempName.length - 2)
     }
@@ -133,13 +136,13 @@ const handleCjlg = vod => {
       tempName = tempName.substring(0, tempName.length - 2)
     }
   }
-  // 如果地区是日本，语言是泰语，去除结尾是泰语
+  // 如果地区是日国，语言是泰语，去除结尾是泰语
   if (tempArea.indexOf('泰国') > -1 || tempLang.indexOf('泰语') > -1) {
     if(tempName.substring(tempName.length - 2) === '泰语') {
       tempName = tempName.substring(0, tempName.length - 2)
     }
   }
-  // 如果地区是日本，语言是泰语，去除结尾是泰语
+  // 如果地区是欧美，语言是英语，去除结尾是英语
   if (tempArea.indexOf('欧美') > -1 || tempLang.indexOf('英语') > -1) {
     if(tempName.substring(tempName.length - 2) === '英语') {
       tempName = tempName.substring(0, tempName.length - 2)
@@ -333,6 +336,7 @@ const repeatArr = arr => {
 
 // 去掉末尾带1的影片，倒数第二个不为数字，例如：反贪风暴1 => 反贪风暴 1941 => 1941
 const delVodNum = vodName => {
+  vodName = dealStr({str: vodName})
   const lStr = vodName.substring(vodName.length - 1)
   const llStr = vodName.substring(vodName.length - 2, vodName.length - 1)
   if (+lStr === 1) {
