@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-18 19:48:54
+ * @LastEditTime: 2022-11-18 20:43:54
  * @Descripttion: 
  */
 const { areaArr, langArr, vArr } = require('../contants')
@@ -74,7 +74,7 @@ const handleCjStr = str => {
  * 处理采集名称/地区/语言同义词转换+处理
  */
 const handleCjlg = vod => {
-  let { vod_name = '', vod_area = '', vod_lang, type_name } = vod
+  let { vod_name = '', vod_area = '', vod_lang = '', type_name = '' } = vod
   let vodAreaArr = vod_area.split(',')
   let vodLangArr = vod_lang.split(',')
   let tempArea = ''
