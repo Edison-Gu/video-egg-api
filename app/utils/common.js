@@ -2,12 +2,10 @@
  * @Author: EdisonGu
  * @Date: 2022-08-20 22:44:08
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-16 10:45:28
+ * @LastEditTime: 2022-11-18 17:38:34
  * @Descripttion: 
  */
-'use strict';
-// const fs = require('fs')
-
+const { areaArr, langArr, vArr } = require('../contants')
 const ctxBody = ({ data, custom = {} }) => {
   let body = {
     code: data ? 1 : -1,
@@ -31,6 +29,7 @@ const cjBody = (bufferStr) => {
   let result = JSON.parse(bufferStr.toString())
   const { list = [] } = result
   const handleList = list.map(item => {
+    item = handleCjlg(item)
     let { vod_douban_score = 0, vod_name, type_name } = item
     item.vod_name = dealStr({ str: `${handleCjStr(vod_name)}${transType(type_name)}` })
     vod_douban_score = (+vod_douban_score) > 4 ? vod_douban_score : getRandomScore() // 豆瓣大于4的评分才用，否则取评分
@@ -71,6 +70,88 @@ const handleCjStr = str => {
   })
   return tempStr ? tempStr : str
 }
+/**
+ * 处理采集名称/地区/语言同义词转换+处理
+ */
+const handleCjlg = vod => {
+  let { vod_name = '', vod_area = '', vod_lang, type_name } = vod
+  let vodAreaArr = vod_area.split(',')
+  let vodLangArr = vod_lang.split(',')
+  let tempArea = ''
+  let tempLang = ''
+  let tempName = ''
+  const transTypeEn = transType(type_name)
+  vod_name = delVodNum(vod_name)
+  // 地区转换
+  vodAreaArr = vodAreaArr.map(item => {
+    const index = areaArr.findIndex(el => el.str === item)
+    index > -1 && (item = areaArr[index].rpStr)
+    return item
+  })
+  // 语言转换 + 处理name
+  vodLangArr = vodLangArr.map(item => {
+    const index = langArr.findIndex(el => el.str === item)
+    index > -1 && (item = langArr[index].rpStr)
+    return item
+  })
+  // 名称特殊部分转换
+  vArr.forEach(el => {
+    const vIndex = vod_name.indexOf(el.str)
+    if (tempName) return // 防止 III 变成 2I
+    if (vIndex > -1) {
+      tempName = vod_name.replace(el.str, el.rpStr)
+      if (transTypeEn === 'NetFlyComic' || transTypeEn === 'NetFlyShow') {
+        const str = vod_name.substring(vod_name.length - el.str.length)
+        if (str === el.str && vod_name.substring(0, vIndex)) {
+          tempName = `${delVodNum(vod_name.substring(0, vIndex))} 第${SectionToChinese(el.rpStr)}季`
+        }
+      }
+    }
+  })
+  // 名称转换
+  langArr.forEach(el => {
+    const vIndex = vod_name.indexOf(el.str)
+    if (vIndex > -1) {
+      const str = vod_name.substring(vod_name.length - el.str.length)
+      if (str === el.str && vod_name.substring(0, vIndex)) {
+        tempName = `${delVodNum(vod_name.substring(0, vIndex))} ${el.rpStr}`
+      }
+    }
+  })
+  
+  tempArea = repeatArr(vodAreaArr).join(',')
+  tempLang = repeatArr(vodLangArr).join(',')
+  // 如果地区是大陆，去除结尾是国语
+  if (tempArea.indexOf('大陆') > -1 || tempArea.indexOf('香港') > -1 || tempLang.indexOf('国语') > -1) {
+    if(tempName.substring(tempName.length - 2) === '国语') {
+      tempName = tempName.substring(0, tempName.length - 2)
+    }
+  }
+  // 如果地区是日本，语言是日语，去除结尾是日语
+  if (tempArea.indexOf('日本') > -1 || tempLang.indexOf('日语') > -1) {
+    if(tempName.substring(tempName.length - 2) === '日语') {
+      tempName = tempName.substring(0, tempName.length - 2)
+    }
+  }
+  // 如果地区是日本，语言是泰语，去除结尾是泰语
+  if (tempArea.indexOf('泰国') > -1 || tempLang.indexOf('泰语') > -1) {
+    if(tempName.substring(tempName.length - 2) === '泰语') {
+      tempName = tempName.substring(0, tempName.length - 2)
+    }
+  }
+  // 如果地区是日本，语言是泰语，去除结尾是泰语
+  if (tempArea.indexOf('欧美') > -1 || tempLang.indexOf('英语') > -1) {
+    if(tempName.substring(tempName.length - 2) === '英语') {
+      tempName = tempName.substring(0, tempName.length - 2)
+    }
+  }
+  console.log('----vod', vod_name, tempName)
+  vod.vod_area = tempArea || vod_area
+  vod.vod_lang = tempLang || vod_lang
+  vod.vod_name = tempName || vod_name
+  // 
+  return vod
+}
 
 // 根据影片类型来判断是否为电影/电视剧/综艺/动漫
 const transType = typeName => {
@@ -94,7 +175,6 @@ const transType = typeName => {
   if (typeName.indexOf('解说') > -1) {
     transName = 'NetFlyShort'
   }
-
   return transName
 }
 
@@ -107,16 +187,6 @@ const getRandomScore = (min = 6.8, max = 8.8) => {
 
 const randomCount = count => {
   return Math.floor(Math.random() * count)
-}
-/**
- * 根据id和total获取范围
- */
-const maxCount = ({ id, total, pageSize, multiple = 20, spacing = 50 }) => {
-  let maxCount = id + pageSize * multiple
-  if ((maxCount - 1000) > total) {
-    maxCount = id - spacing
-  }
-  return maxCount
 }
 
 /**
@@ -257,12 +327,27 @@ function SectionToChinese(num) {
   return re.replace('一十', '十')
 }
 
+const repeatArr = arr => {
+  return Array.from(new Set(arr))
+}
+
+// 去掉末尾带1的影片，倒数第二个不为数字，例如：反贪风暴1 => 反贪风暴 1941 => 1941
+const delVodNum = vodName => {
+  const lStr = vodName.substring(vodName.length - 1)
+  const llStr = vodName.substring(vodName.length - 2, vodName.length - 1)
+  if (+lStr === 1) {
+    if (isNaN(llStr) || llStr === ' ' || llStr === '') { // 倒数第二个不是数字
+      vodName = vodName.substring(0, vodName.length - 1)
+    }
+  }
+  return vodName
+}
+
 module.exports = {
   ctxBody,
   objectBody,
   cjBody,
   randomCount,
-  maxCount,
   dealStr,
   transCode,
   incKey,

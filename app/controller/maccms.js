@@ -2,7 +2,7 @@
  * @Author: EdisonGu
  * @Date: 2022-11-13 23:52:17
  * @LastEditors: EdisonGu
- * @LastEditTime: 2022-11-15 15:11:01
+ * @LastEditTime: 2022-11-17 14:32:38
  * @Descripttion: 
  */
 const Url  = require('url')
@@ -48,7 +48,7 @@ class CmsController extends Controller {
     //   }
     // }
     const { status, data } = await this.ctx.curl(curl, { timeout: 10000 })
-    console.log('----status', status)
+    console.log('----status', curl, status)
     if (status === 200) {
       ctx.body = cjBody(data)
     }
